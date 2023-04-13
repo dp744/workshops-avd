@@ -141,7 +141,7 @@ management api http-commands
 
 ```eos
 !
-username arista privilege 15 role network-admin secret sha512 $6$JjgpdVjdJ5z.sqrf$e8RhsHr4G.2mcC4QgekDj1vKURZcCdXewNfz3ehIyKA6j6C/bsU9d62EZeXojgybpPmTy7K5kwHAUzsghJj7E1
+username arista privilege 15 role network-admin secret sha512 $6$nNpDvZYJckTLmR.Z$JKcZrbaDgcr4abpA4zmivPIbMVVyx3WUJupt.sF6tAoVvopgNufDqo1cG4knccYrsw3o3Gw0KFiDvobQFpsqO.
 ```
 
 ## AAA Authorization
@@ -276,6 +276,7 @@ vlan internal order ascending range 1006 1199
 | ------- | ---- | ------------ |
 | 10 | Ten | - |
 | 20 | Twenty | - |
+| 25 | Twenty-five | - |
 | 4093 | LEAF_PEER_L3 | LEAF_PEER_L3 |
 | 4094 | MLAG_PEER | MLAG |
 
@@ -288,6 +289,9 @@ vlan 10
 !
 vlan 20
    name Twenty
+!
+vlan 25
+   name Twenty-five
 !
 vlan 4093
    name LEAF_PEER_L3
@@ -314,8 +318,8 @@ vlan 4094
 | Ethernet4 | S1-LEAF3_Ethernet2 | *trunk | *20 | *- | *- | 4 |
 | Ethernet5 | S1-LEAF4_Ethernet2 | *trunk | *20 | *- | *- | 4 |
 | Ethernet6 | MLAG_PEER_s1-spine2_Ethernet6 | *trunk | *2-4094 | *- | *['LEAF_PEER_L3', 'MLAG'] | 1 |
-| Ethernet9 | S1-LEAF5_Ethernet2 | *trunk | *10,20 | *- | *- | 9 |
-| Ethernet10 | S1-LEAF6_Ethernet2 | *trunk | *10,20 | *- | *- | 9 |
+| Ethernet9 | S1-LEAF5_Ethernet2 | *trunk | *10,20,25 | *- | *- | 9 |
+| Ethernet10 | S1-LEAF6_Ethernet2 | *trunk | *10,20,25 | *- | *- | 9 |
 
 *Inherited from Port-Channel Interface
 
@@ -400,7 +404,7 @@ interface Ethernet10
 | Port-Channel1 | MLAG_PEER_s1-spine2_Po1 | switched | trunk | 2-4094 | - | ['LEAF_PEER_L3', 'MLAG'] | - | - | - | - |
 | Port-Channel2 | RACK1_Po2 | switched | trunk | 10 | - | - | - | - | 2 | - |
 | Port-Channel4 | RACK2_Po2 | switched | trunk | 20 | - | - | - | - | 4 | - |
-| Port-Channel9 | RACK3_Po2 | switched | trunk | 10,20 | - | - | - | - | 9 | - |
+| Port-Channel9 | RACK3_Po2 | switched | trunk | 10,20,25 | - | - | - | - | 9 | - |
 
 ### Port-Channel Interfaces Device Configuration
 
@@ -435,7 +439,7 @@ interface Port-Channel9
    description RACK3_Po2
    no shutdown
    switchport
-   switchport trunk allowed vlan 10,20
+   switchport trunk allowed vlan 10,20,25
    switchport mode trunk
    mlag 9
 ```
@@ -476,6 +480,7 @@ interface Loopback0
 | --------- | ----------- | --- | ---- | -------- |
 | Vlan10 | Ten | default | - | False |
 | Vlan20 | Twenty | default | - | False |
+| Vlan25 | Twenty-five | default | - | False |
 | Vlan4093 | MLAG_PEER_L3_PEERING | default | 1500 | False |
 | Vlan4094 | MLAG_PEER | default | 1500 | False |
 
@@ -485,6 +490,7 @@ interface Loopback0
 | --------- | --- | ---------- | ------------------ | ------------------------- | ---- | ------ | ------- |
 | Vlan10 |  default  |  10.10.10.2/24  |  -  |  10.10.10.1  |  -  |  -  |  -  |
 | Vlan20 |  default  |  10.20.20.2/24  |  -  |  10.20.20.1  |  -  |  -  |  -  |
+| Vlan25 |  default  |  10.25.25.2/24  |  -  |  10.25.25.1  |  -  |  -  |  -  |
 | Vlan4093 |  default  |  10.1.254.0/31  |  -  |  -  |  -  |  -  |  -  |
 | Vlan4094 |  default  |  10.1.253.0/31  |  -  |  -  |  -  |  -  |  -  |
 
@@ -503,6 +509,12 @@ interface Vlan20
    no shutdown
    ip address 10.20.20.2/24
    ip virtual-router address 10.20.20.1
+!
+interface Vlan25
+   description Twenty-five
+   no shutdown
+   ip address 10.25.25.2/24
+   ip virtual-router address 10.25.25.1
 !
 interface Vlan4093
    description MLAG_PEER_L3_PEERING

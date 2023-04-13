@@ -138,7 +138,7 @@ management api http-commands
 
 ```eos
 !
-username arista privilege 15 role network-admin secret sha512 $6$kXPnIWR98V9caLZk$4YY5edZZc1yTYLzwNIR956oP3P5mNCJRh8JG3SELUeC1KC7UAs6ZLxesO8I8iEciOhfKxF1BqjxIbawFmKbrM/
+username arista privilege 15 role network-admin secret sha512 $6$ZMmWsvcJ1pnwHJSC$J1adwSgWmRhxU2N0EMyV3.htJXuqK/u/tQ5EaVVLvmzc6RBrR7fxIC6I01G.OEaG8aA6X0l546a08MAbZ1dok1
 ```
 
 ## AAA Authorization
@@ -273,6 +273,7 @@ vlan internal order ascending range 1006 1199
 | ------- | ---- | ------------ |
 | 10 | Ten | - |
 | 20 | Twenty | - |
+| 25 | Twenty-five | - |
 | 4094 | MLAG_PEER | MLAG |
 
 ## VLANs Device Configuration
@@ -284,6 +285,9 @@ vlan 10
 !
 vlan 20
    name Twenty
+!
+vlan 25
+   name Twenty-five
 !
 vlan 4094
    name MLAG_PEER
@@ -301,8 +305,8 @@ vlan 4094
 | Interface | Description | Mode | VLANs | Native VLAN | Trunk Group | Channel-Group |
 | --------- | ----------- | ---- | ----- | ----------- | ----------- | ------------- |
 | Ethernet1 | MLAG_PEER_s1-leaf6_Ethernet1 | *trunk | *2-4094 | *- | *['MLAG'] | 1 |
-| Ethernet2 | S1-SPINE1_Ethernet9 | *trunk | *10,20 | *- | *- | 2 |
-| Ethernet3 | S1-SPINE2_Ethernet9 | *trunk | *10,20 | *- | *- | 2 |
+| Ethernet2 | S1-SPINE1_Ethernet9 | *trunk | *10,20,25 | *- | *- | 2 |
+| Ethernet3 | S1-SPINE2_Ethernet9 | *trunk | *10,20,25 | *- | *- | 2 |
 | Ethernet6 | MLAG_PEER_s1-leaf6_Ethernet6 | *trunk | *2-4094 | *- | *['MLAG'] | 1 |
 
 *Inherited from Port-Channel Interface
@@ -341,7 +345,7 @@ interface Ethernet6
 | Interface | Description | Type | Mode | VLANs | Native VLAN | Trunk Group | LACP Fallback Timeout | LACP Fallback Mode | MLAG ID | EVPN ESI |
 | --------- | ----------- | ---- | ---- | ----- | ----------- | ------------| --------------------- | ------------------ | ------- | -------- |
 | Port-Channel1 | MLAG_PEER_s1-leaf6_Po1 | switched | trunk | 2-4094 | - | ['MLAG'] | - | - | - | - |
-| Port-Channel2 | SPINES_Po9 | switched | trunk | 10,20 | - | - | - | - | 2 | - |
+| Port-Channel2 | SPINES_Po9 | switched | trunk | 10,20,25 | - | - | - | - | 2 | - |
 
 ### Port-Channel Interfaces Device Configuration
 
@@ -359,7 +363,7 @@ interface Port-Channel2
    description SPINES_Po9
    no shutdown
    switchport
-   switchport trunk allowed vlan 10,20
+   switchport trunk allowed vlan 10,20,25
    switchport mode trunk
    mlag 2
 ```
